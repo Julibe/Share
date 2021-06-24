@@ -10,8 +10,9 @@ This is a list of the programs I use to install from Chocolatey.
 
 
 
-## Install
-
+## 
+<details>
+  <summary>Install</summary>
 ### Choco
 
     choco install choco-protocol-support chocolatey chocolatey-core.extension chocolatey-dotnetfx.extension chocolatey-misc-helpers.extension chocolatey-windowsupdate.extension chocolateygui -y
@@ -51,8 +52,7 @@ This is a list of the programs I use to install from Chocolatey.
 ### Other
 
     choco install blender fontbase -y
-
-
+</details>
 ## Update
 
 ### Choco
