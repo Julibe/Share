@@ -13,6 +13,7 @@ This is a list of the programs I use to install from Chocolatey.
 ## 
 <details>
   <summary>Install</summary>
+    
 ### Choco
 
     choco install choco-protocol-support chocolatey chocolatey-core.extension chocolatey-dotnetfx.extension chocolatey-misc-helpers.extension chocolatey-windowsupdate.extension chocolateygui -y
