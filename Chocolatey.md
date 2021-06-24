@@ -10,7 +10,7 @@ This is a list of the programs I use to install from Chocolatey.
 
 
 
-## Iinstall
+## Install
 
 ### Choco
 
@@ -51,3 +51,46 @@ This is a list of the programs I use to install from Chocolatey.
 ### Other
 
     choco install blender fontbase -y
+
+
+## Update
+
+### Choco
+
+    choco update choco-protocol-support chocolatey chocolatey-core.extension chocolatey-dotnetfx.extension chocolatey-misc-helpers.extension chocolatey-windowsupdate.extension chocolateygui -y
+
+### Browsers
+
+    choco update firefox googlechrome microsoft-edge opera brave vivaldi safari -y
+
+### Tools
+
+    choco update 7zip.update powertoys bulkrenameutility sagethumbs teracopy qttabbar phraseexpress.update Ghostscript.app autohotkey.portable file-converter xnviewmp.update irfanview gimp foxitreader -y
+
+### Security
+
+    choco update ccleaner ccenhancer ccenhancer.update afedteated driverbooster iobit-unupdateer Recuva -y
+
+### Runtime
+
+    choco update KB2533623 KB2919355 KB2919442 KB2999226 KB3033929 KB3035131 directx vcredist140 vcredist2008 vcredist2010 vcredist2013 vcredist2015 vcredist2017 dotnet dotnetfx chocolatey-dotnetfx.extension dotnet-runtime dotnetcore-desktopruntime dotnetcore3-desktop-runtime jre8 javaruntime silverlight Sudo -y
+
+### Media
+
+    choco update vlc stremio plexmediaserver kodi metax mp3tag k-litecodecpackfull obs-studio.update geforce-experience spotify handbrake audacity musicbee -y
+
+### Coding
+
+    choco update filezilla git.update heidisql notepadplusplus.update github-desktop mysql.workbench nodejs.update vscode-insiders.update python -y
+
+### Gaming
+
+    choco update steam-client origin gamesavemanager epicgameslauncher goggalaxy ubisoft-connect bethesdanet directx -y
+
+### Chat
+
+    choco update whatsapp telegram.update zoom skype -y
+
+### Other
+
+    choco update blender fontbase -y
