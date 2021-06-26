@@ -21,7 +21,7 @@ This is a list of the programs I use to install from Chocolatey.
 
 ### Tools
 
-    choco install 7zip.install powertoys bulkrenameutility sagethumbs teracopy qttabbar phraseexpress.install Ghostscript.app autohotkey.portable file-converter xnviewmp.install irfanview gimp foxitreader -y
+    choco install 7zip.install powertoys bulkrenameutility sagethumbs teracopy qttabbar phraseexpress.install Ghostscript.app autohotkey.portable file-converter xnviewmp.install irfanview gimp foxitreader typora -y
 
 ### Security
 
