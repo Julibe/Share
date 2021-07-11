@@ -1,9 +1,12 @@
 
 # Custom Chocolatey codes
 This is a list of the programs I use to install from Chocolatey.
+
 ## CMD
-    @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1('))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"## PowerShell
+    @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1('))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+## PowerShell
     @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString(('https://chocolatey.org/install.ps1('))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
 <details>
   <summary>Install</summary>
  ## Choco
@@ -27,6 +30,9 @@ This is a list of the programs I use to install from Chocolatey.
  ## Other
     choco install blender fontbase  -y
 </details>
+
+
+
 <details>
   <summary>Update</summary>
 	
