@@ -39,7 +39,7 @@ This is a list of the programs I use to install from Chocolatey.
 
  ## Gaming
 
-    choco install steam-client origin gamesavemanager epicgameslauncher goggalaxy ubisoft-connect bethesdanet directx  -y
+    choco install steam-client origin gamesavemanager epicgameslauncher goggalaxy ubisoft-connect bethesdanet directx launchbox -y
 
  ## Chat
 
