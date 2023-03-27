@@ -16,7 +16,7 @@ This is a list of the programs I use to install from Chocolatey.
 
  ## Browsers
 
-    choco install firefox googlechrome microsoft-edge opera brave vivaldi safari  -y
+    choco install firefox googlechrome microsoft-edge opera brave vivaldi safari authy-desktop -y
 
  ## Transfer
 
@@ -24,7 +24,7 @@ This is a list of the programs I use to install from Chocolatey.
 
  ## Tools
 
-    choco install 7zip.install phraseexpress powertoys bulkrenameutility sagethumbs teracopy qttabbar phraseexpress.install Ghostscript.app autohotkey.portable file-converter xnviewmp.install irfanview foxitreader  -y
+    choco install 7zip.install phraseexpress powertoys bulkrenameutility sagethumbs teracopy qttabbar phraseexpress.install Ghostscript.app autohotkey.portable file-converter xnviewmp.install irfanview foxitreader caesium.install -y
 
  ## Security
 
@@ -68,11 +68,11 @@ This is a list of the programs I use to install from Chocolatey.
  ## Choco
     choco install choco-protocol-support chocolatey chocolatey-core.extension chocolatey-dotnetfx.extension chocolatey-misc-helpers.extension chocolatey-windowsupdate.extension chocolateygui  -y
  ## Browsers
-    choco install firefox googlechrome microsoft-edge opera brave vivaldi safari  -y
+    choco install firefox googlechrome microsoft-edge opera brave vivaldi safari authy-desktop -y
  ## Transfer
     choco install qbittorrent transmission  -y
  ## Tools
-    choco install 7zip.install phraseexpress powertoys bulkrenameutility sagethumbs teracopy qttabbar phraseexpress.install Ghostscript.app autohotkey.portable file-converter xnviewmp.install irfanview foxitreader  -y
+    choco install 7zip.install phraseexpress powertoys bulkrenameutility sagethumbs teracopy qttabbar phraseexpress.install Ghostscript.app autohotkey.portable file-converter xnviewmp.install irfanview foxitreader caesium.install -y
  ## Security
     choco install ccleaner bulk-crap-uninstaller ccenhancer ccenhancer.install afedteated driverbooster iobit-uninstaller attributechanger Recuva  -y
  ## Runtime
