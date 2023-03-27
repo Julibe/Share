@@ -20,11 +20,11 @@ This is a list of the programs I use to install from Chocolatey.
 
  ## Transfer
 
-    choco install qbittorrent transmission  -y
+    choco install qbittorrent  -y
 
  ## Tools
 
-    choco install 7zip.install phraseexpress powertoys bulkrenameutility sagethumbs teracopy qttabbar phraseexpress.install Ghostscript.app autohotkey.portable file-converter xnviewmp.install irfanview foxitreader caesium.install -y
+    choco install 7zip.install phraseexpress powertoys bulkrenameutility sagethumbs  qttabbar phraseexpress.install Ghostscript.app autohotkey.portable file-converter xnviewmp.install irfanview foxitreader caesium.install -y
 
  ## Security
 
