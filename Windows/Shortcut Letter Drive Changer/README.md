@@ -80,7 +80,7 @@ It is the essential tool for:
 
 ---
 
-## 👨Credits
+## Credits
 
 - **Created By:** Julibe
 - **Website:** [https://julibe.com](https://julibe.com)
