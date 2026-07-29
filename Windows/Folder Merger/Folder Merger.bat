@@ -25,7 +25,8 @@ if "%~1"=="" (
 )
 
 :: 2. PREPARE HYBRID EXECUTION
-set "PS_FILE=%temp%\%~n0_merger.ps1"
+for /f "usebackq delims=" %%G in (`powershell -NoProfile -Command "[guid]::NewGuid().ToString()"`) do set "PS_GUID=%%G"
+set "PS_FILE=%temp%\%~n0_%PS_GUID%_merger.ps1"
 copy /y "%~f0" "%PS_FILE%" >nul
 
 echo [STATUS] Analyzing folders...
@@ -52,7 +53,15 @@ exit /b
 Add-Type -AssemblyName Microsoft.VisualBasic
 
 $debug_mode = $true
-$fso = New-Object -ComObject Scripting.FileSystemObject
+
+# Counters for the end-of-run summary
+$moved_count = 0
+$renamed_count = 0
+$overwritten_count = 0
+$skipped_count = 0
+$failed_count = 0
+$recycled_count = 0
+$kept_count = 0
 
 # Trap Errors
 trap {
@@ -82,15 +91,24 @@ function Get-UniqueFileName {
     return $newPath
 }
 
+function Get-SanitizedName {
+    param([string]$name, [string]$replacement = " ")
+    $invalidChars = [System.IO.Path]::GetInvalidFileNameChars() -join ''
+    $pattern = "[$([regex]::Escape($invalidChars))]"
+    $clean = $name -replace $pattern, $replacement
+    return $clean.Trim()
+}
+
 # --- MAIN LOGIC ---
 
 $dropped_items = $args
 
-# Filter for folders only
+# Filter for folders only, and normalize each path via Get-Item so that
+# later string comparisons/Substring math are reliable.
 $source_folders = @()
 foreach ($item in $dropped_items) {
     if (Test-Path $item -PathType Container) {
-        $source_folders += $item
+        $source_folders += (Get-Item $item).FullName
     }
 }
 
@@ -113,6 +131,13 @@ if ([string]::IsNullOrWhiteSpace($target_folder_name)) {
     exit
 }
 
+$target_folder_name = Get-SanitizedName -name $target_folder_name.Trim()
+
+if ([string]::IsNullOrWhiteSpace($target_folder_name)) {
+    Write-Host "[CANCELLED] Name became empty after removing invalid characters." -ForegroundColor Red
+    exit
+}
+
 $destination_path = Join-Path $parent_dir $target_folder_name
 
 # Create Destination
@@ -122,53 +147,98 @@ if (!(Test-Path $destination_path)) {
 } else {
     Write-Host "[TARGET] Merging into: $destination_path" -ForegroundColor Black
 }
+$destination_path = (Get-Item $destination_path).FullName
 
 echo "--------------------------------------------------------"
+
+# Track a running "apply to all" choice so large merges with many conflicts
+# don't require answering one at a time.
+$apply_all_action = $null
 
 # 2. Process Merge
 foreach ($folder in $source_folders) {
     if ($folder -eq $destination_path) { continue }
 
+    # Guard against a source folder that contains the destination, or a
+    # source folder that now lives inside the destination.
+    $folderWithSep = $folder.TrimEnd('\') + '\'
+    if ($destination_path.StartsWith($folderWithSep, [System.StringComparison]::OrdinalIgnoreCase)) {
+        Write-Host "Skipping: $folder (destination is nested inside this folder)" -ForegroundColor Yellow
+        continue
+    }
+    if ($folder.StartsWith($destination_path.TrimEnd('\') + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
+        Write-Host "Skipping: $folder (this folder is nested inside the destination)" -ForegroundColor Yellow
+        continue
+    }
+
+    if (!(Test-Path $folder)) {
+        Write-Host "Skipping: $folder (no longer exists)" -ForegroundColor Yellow
+        continue
+    }
+
     Write-Host "Processing: $folder" -ForegroundColor DarkGray
 
-    $files = Get-ChildItem -Path $folder -Recurse -File
+    $files = Get-ChildItem -Path $folder -Recurse -File -Force
 
     foreach ($file in $files) {
-        $relativePath = $file.FullName.Substring($folder.Length)
-        if ($relativePath.StartsWith("\")) { $relativePath = $relativePath.Substring(1) }
+        try {
+            $relativePath = $file.FullName.Substring($folder.Length)
+            if ($relativePath.StartsWith("\")) { $relativePath = $relativePath.Substring(1) }
 
-        $destFile = Join-Path $destination_path $relativePath
-        $destDir = [System.IO.Path]::GetDirectoryName($destFile)
+            $destFile = Join-Path $destination_path $relativePath
+            $destDir = [System.IO.Path]::GetDirectoryName($destFile)
 
-        if (!(Test-Path $destDir)) {
-            New-Item -ItemType Directory -Path $destDir | Out-Null
-        }
-
-        # CONFLICT HANDLING
-        if (Test-Path $destFile) {
-            Write-Host "`n[CONFLICT] File exists: " -NoNewline -ForegroundColor Red
-            Write-Host $file.Name -ForegroundColor Black
-            Write-Host "   (O)verwrite  |  (R)ename  |  (S)kip" -ForegroundColor DarkGray
-
-            $action = Read-Host "   Choice"
-            $action = $action.Trim().ToUpper()
-
-            if ($action -eq "O") {
-                Move-Item -Path $file.FullName -Destination $destFile -Force
-                Write-Host "   -> Overwritten" -ForegroundColor Red
+            if (!(Test-Path $destDir)) {
+                New-Item -ItemType Directory -Path $destDir -Force | Out-Null
             }
-            elseif ($action -eq "R") {
-                $newDest = Get-UniqueFileName $destFile
-                Move-Item -Path $file.FullName -Destination $newDest
-                Write-Host "   -> Renamed: $([System.IO.Path]::GetFileName($newDest))" -ForegroundColor Black
+
+            # CONFLICT HANDLING
+            if (Test-Path $destFile) {
+                $action = $apply_all_action
+
+                if (-not $action) {
+                    Write-Host "`n[CONFLICT] File exists: " -NoNewline -ForegroundColor Red
+                    Write-Host $file.Name -ForegroundColor Black
+                    Write-Host "   (O)verwrite  |  (R)ename  |  (S)kip  |  (OA) Overwrite All  |  (RA) Rename All  |  (SA) Skip All" -ForegroundColor DarkGray
+
+                    $input = Read-Host "   Choice"
+                    $input = $input.Trim().ToUpper()
+
+                    if ($input -in @("OA", "RA", "SA")) {
+                        $apply_all_action = $input.Substring(0, 1)
+                        $action = $apply_all_action
+                    } else {
+                        $action = $input
+                    }
+                }
+
+                if ($action -eq "O") {
+                    Move-Item -Path $file.FullName -Destination $destFile -Force -ErrorAction Stop
+                    Write-Host "   -> Overwritten" -ForegroundColor Red
+                    $overwritten_count++
+                    $moved_count++
+                }
+                elseif ($action -eq "R") {
+                    $newDest = Get-UniqueFileName $destFile
+                    Move-Item -Path $file.FullName -Destination $newDest -ErrorAction Stop
+                    Write-Host "   -> Renamed: $([System.IO.Path]::GetFileName($newDest))" -ForegroundColor Black
+                    $renamed_count++
+                    $moved_count++
+                }
+                else {
+                    Write-Host "   -> Skipped" -ForegroundColor Gray
+                    $skipped_count++
+                }
             }
             else {
-                Write-Host "   -> Skipped" -ForegroundColor Gray
+                Move-Item -Path $file.FullName -Destination $destFile -ErrorAction Stop
+                Write-Host "." -NoNewline -ForegroundColor Black
+                $moved_count++
             }
         }
-        else {
-            Move-Item -Path $file.FullName -Destination $destFile
-            Write-Host "." -NoNewline -ForegroundColor Black
+        catch {
+            Write-Host "`n   -> FAILED: $($file.Name) - $($_.Exception.Message)" -ForegroundColor Red
+            $failed_count++
         }
     }
 }
@@ -190,16 +260,23 @@ foreach ($folder in $source_folders) {
             # Use VisualBasic to send to Recycle Bin instead of permanent delete
             [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($folder, 'OnlyErrorDialogs', 'SendToRecycleBin')
             Write-Host "[RECYCLED] Empty: $([System.IO.Path]::GetFileName($folder))" -ForegroundColor DarkGreen
+            $recycled_count++
         }
         catch {
             Write-Host "[ERROR] Could not recycle: $($folder)" -ForegroundColor Red
+            $failed_count++
         }
     } else {
         Write-Host "[KEPT] Not empty: $([System.IO.Path]::GetFileName($folder))" -ForegroundColor DarkGray
+        $kept_count++
     }
 }
 
 echo ""
 Write-Host "Merge Complete." -ForegroundColor Black
+Write-Host "  Files moved: $moved_count  (overwritten: $overwritten_count, renamed: $renamed_count)"
+Write-Host "  Files skipped: $skipped_count"
+Write-Host "  Files failed:  $failed_count" -ForegroundColor $(if ($failed_count -gt 0) { "Red" } else { "DarkGray" })
+Write-Host "  Folders recycled: $recycled_count  |  Folders kept (not empty): $kept_count"
 Write-Host "Press Enter to exit..."
 [void][Console]::ReadLine()
