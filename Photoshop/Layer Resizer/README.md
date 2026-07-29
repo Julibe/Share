@@ -7,7 +7,7 @@
 
 ## Usage Instructions
 
-1.  Download the `Julibe_Layer_Resizer.jsx` script file.
+1.  Download the `Layer Resizer.jsx` script file.
 2.  Open your document in **Adobe Photoshop**.
 3.  **Select** the layers you want to resize in the Layers panel (skip this if
     you plan to resize _all_ layers).
@@ -25,9 +25,9 @@
 
 ## What This Does
 
-**Julibe's Photoshop Layer Resizer** is an advanced JSX automation script
-designed to solve a major workflow bottleneck in Photoshop: **Resizing multiple
-independent layers to exact dimensions at the same time.**
+**Photoshop Layer Resizer** is an advanced JSX automation script designed to
+solve a major workflow bottleneck in Photoshop: **Resizing multiple independent
+layers to exact dimensions at the same time.**
 
 Normally, Photoshop's transform tool resizes layers _relative_ to their current
 size. If you select 10 layers of different sizes and type "1024px", it stretches
@@ -61,8 +61,7 @@ random sizes.
 Normally, you would have to click Layer 1, press `Ctrl+T`, type a percentage,
 hit enter, and repeat 50 times.
 
-**Julibe's Layer Resizer** turns this 10-minute nightmare into a **3-second
-task**.
+**Layer Resizer** turns this 10-minute nightmare into a **3-second task**.
 
 It is the essential tool for:
 
