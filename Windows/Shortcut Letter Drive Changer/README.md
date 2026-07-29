@@ -1,60 +1,94 @@
-# 🚀 Julibe's Shortcut Drive Changer
+# Julibe's Item Organizer
 
-> **The simplest "Drag-and-Drop" utility for batch-updating Windows shortcuts leter PATHS.**
+> **The simplest "Drag-and-Drop" utility for instantly grouping, naming, and
+> organizing files and folders.**
 
-![Version](https://img.shields.io/badge/version-2026-brightgreen) ![Platform](https://img.shields.io/badge/platform-Windows-0078D6) ![Author](https://img.shields.io/badge/author-Julibe-orange)
----
+## ![Version](https://img.shields.io/badge/version-2026-brightgreen) ![Platform](https://img.shields.io/badge/platform-Windows-0078D6) ![Author](https://img.shields.io/badge/author-Julibe-orange)
 
-## 📝 Usage Instructions
-1.  Download `Shortcut Letter Drive Changer.bat`.
-2.  **Select** the shortcuts or folders you want to fix in File Explorer.
-3.  **Drag and Drop** them directly onto the `Shortcut Letter Drive Changer.bat` icon.
-4.  A console window will open.
-5.  Type the **New Drive Letter** (e.g., `G`) and press **Enter**.
-6.  Watch the magic happen.
+## Usage Instructions
+
+1.  Download `Julibe_Organizer.bat`.
+2.  **Select** the files and/or folders you want to group together in File
+    Explorer.
+3.  **Drag and Drop** them directly onto the `Julibe_Organizer.bat` icon.
+    - _(Alternatively, double-click the script to manually paste a folder
+      path)._
+4.  A pop-up window will appear suggesting a beautifully cleaned-up folder name
+    based on the first item you dropped.
+5.  **Edit or confirm** the new folder name and press **OK**.
+6.  A console window handles the rest, safely moving all items into your new
+    folder.
 7.  Done!
----
-
-## 📖 What This Does
-**Julibe's Shortcut Drive Changer** is a hybrid Batch + PowerShell utility designed to solve a specific, frustrating Windows headache: **Broken Shortcuts.**
-
-When you move files from one drive to another (e.g., migrating games from `C:` to `D:`), every shortcut pointing to those files breaks immediately. This tool allows you to:
-
-1.  **Drag and drop** individual shortcuts (`.lnk`) or entire folders containing shortcuts onto the script file.
-2.  **Enter a new drive letter** (e.g., `E`).
-3.  Automatically **update the Target Path, Working Directory, and Icon Location** for every shortcut instantly.
 
 ---
 
-## 💎 Why You Need This
-**Stop fixing shortcuts manually.**
+## What This Does
 
-Imagine you just upgraded your PC. You bought a massive new 400TB SSD and moved your entire Game or Project library from Drive `C:` to Drive `D:`. You click your favorite application, and... **Error.** *Windows cannot find the file.*
+**Julibe's Item Organizer** is a hybrid Batch + PowerShell utility designed to
+solve a very common desktop and download-folder headache: **Scattered Files.**
 
-Now imagine doing that for **5000 shortcuts**.
+When you drag and drop a chaotic mix of files and folders onto this tool, it
+automatically:
 
-**Julibe's Shortcut Drive Changer** is the magic tool that fixes this nightmare. It turns hours of tedious right-clicking, selecting "Properties," and typing new paths into a **5-second drag-and-drop operation**.
+1.  **Smart-Names:** Reads the name of the first dropped item, strips away ugly
+    punctuation (like `.`, `_`, `-`), and formats it into clean **Title Case**
+    (e.g., `my_project.v2.final` becomes `My Project V2 Final`).
+2.  **Prompts You:** Opens a visual input box letting you approve or tweak the
+    generated name.
+3.  **Creates & Moves:** Creates the new master folder and instantly moves all
+    dropped items inside it.
+4.  **Handles Conflicts:** If a file with the same name already exists in the
+    destination, it elegantly pauses to ask if you want to **Overwrite, Rename,
+    or Skip** (with "Apply to All" options for massive batches).
+
+---
+
+## Why You Need This
+
+**Stop creating new folders, naming them, and dragging things manually.**
+
+Imagine your Desktop or Downloads folder is a mess. You have 15 different
+images, documents, and sub-folders all related to "Project X". Normally, you'd
+have to right-click -> New -> Folder, type the name, select all 15 items, and
+drag them inside.
+
+**Julibe's Item Organizer** is the magic tool that turns a multi-step chore into
+a **single drag-and-drop motion.**
 
 It is the essential tool for:
-*   **Power Users** optimizing their storage.
-*   **IT Admins** deploying drive mapping changes.
-*   **Digital Hoarders** organizing massive file collections.
+
+- **Digital Hoarders** trying to quickly group downloaded assets.
+- **Creative Professionals** bundling project files together.
+- **Anyone** who wants a perfectly clean desktop in a matter of seconds.
 
 ---
 
-## 🐞 Known Bugs & Limitations
-1.  **UNC Paths:** This tool is strictly designed for **Drive Letters** (e.g., `C:\Folder`). It may not function correctly if the source path is a network share starting with `\\ServerName\`.
-2.  **Web Shortcuts:** It specifically targets `.lnk` files. It does not update `.url` (Internet Shortcuts).
-3.  **Admin Rights:** If you are trying to update shortcuts located in protected system folders (like `C:\Program Files` or the Start Menu), you may need to run the script as **Administrator**.
-4.  **Temp File:** The script creates a temporary `.ps1` file in your `%temp%` folder during execution. It attempts to delete it automatically, but a hard crash might leave a harmless residue file.
+## Known Bugs & Limitations
+
+1.  **Cross-Drive Moving:** If you enter a manual path that is on a different
+    drive than the script, Windows handles "Moves" as "Copy then Delete". For
+    massive files (like 50GB videos), this will take time.
+2.  **Path Length Limits:** Windows has a historical 260-character path limit.
+    If nesting these items inside the new folder pushes the file path over this
+    limit, the move might fail.
+3.  **Admin Rights:** If you are trying to organize files located in protected
+    system directories (like `C:\Program Files`), you will need to run the
+    script as **Administrator**.
+4.  **Temp File:** The script creates a temporary `.ps1` file in your `%temp%`
+    folder during execution. It attempts to delete it automatically, but a hard
+    crash might leave a harmless residue file.
 
 ---
 
-## 👨‍💻 Credits
-*   **Created By:** Julibe
-*   **Website:** [https://julibe.com](https://julibe.com)
-*   **Copyright:** 2026
-*   **Mission:** Crafting Amazing Digital Experiences.
+## 👨Credits
+
+- **Created By:** Julibe
+- **Website:** [https://julibe.com](https://julibe.com)
+- **Copyright:** 2026
+- **Mission:** Crafting Amazing Digital Experiences.
 
 ---
-*Disclaimer: This tool modifies files. While it includes safety checks, always backup your data before running batch operations on critical system files.*
+
+_Disclaimer: This tool modifies and moves files. While it includes extensive
+safety checks (like preventing moving a folder into itself), always backup your
+data before running bulk file operations._

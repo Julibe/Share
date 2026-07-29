@@ -239,7 +239,7 @@ function processLayers() {
         }
 
         var successMsg = "All done! I successfully rotated and/or flipped " + finalLayerIDs.length + " layer(s) for you.\n\n";
-        successMsg += "Thank you for using the Photoshop Layer Rotator. I hope this sister-tool perfectly complements your workflow!\n\n";
+        successMsg += "Thank you for using the Photoshop Layer Rotator. I hope this tool perfectly complements your workflow!\n\n";
         successMsg += "If you'd like to see more of my work or need other custom tools, I'd love for you to drop by:\n\n";
         successMsg += "Julibe | Crafting Digital Experiences\n";
         successMsg += "https://julibe.com\n";
