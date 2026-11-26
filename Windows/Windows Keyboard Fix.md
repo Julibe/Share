@@ -19,36 +19,22 @@
 Open **PowerShell as Administrator** and execute the following script to configure English (US) as the preferred user language while using the Latin American keyboard layout exclusively, including on the Windows login screen.
 
 ```
-# Keyboard layout configuration
-$Language = "en-US"
-$Keyboard = "0000080a"
-
-# 1. Configure Windows user language and keyboard
-$LangList = New-WinUserLanguageList $Language
+# 1. Force Windows language list to English (US) + Latin American keyboard ONLY
+$LangList = New-WinUserLanguageList "en-US"
 $LangList[0].InputMethodTips.Clear()
-$LangList[0].InputMethodTips.Add("0409:$Keyboard")
+$LangList[0].InputMethodTips.Add("0409:0000080a")
 Set-WinUserLanguageList $LangList -Force
 
-# 2. Configure Current User and System Default
-$RegistryPaths = @(
-    "HKCU:\Keyboard Layout\Preload",
-    "Registry::HKEY_USERS\.DEFAULT\Keyboard Layout\Preload"
-)
+# 2. Clear and set Current User Preload to Latin American (0000080a)
+Remove-Item -Path "HKCU:\Keyboard Layout\Preload" -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -Path "HKCU:\Keyboard Layout\Preload" -Force | Out-Null
+New-ItemProperty -Path "HKCU:\Keyboard Layout\Preload" -Name "1" -Value "0000080a" -PropertyType String -Force | Out-Null
 
-foreach ($Path in $RegistryPaths) {
-    Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
-    New-Item -Path $Path -Force | Out-Null
+# 3. Clear and set System Default (Login Screen) Preload to Latin American (0000080a)
+Remove-Item -Path "Registry::HKEY_USERS\.DEFAULT\Keyboard Layout\Preload" -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -Path "Registry::HKEY_USERS\.DEFAULT\Keyboard Layout\Preload" -Force | Out-Null
+New-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Keyboard Layout\Preload" -Name "1" -Value "0000080a" -PropertyType String -Force | Out-Null
 
-    New-ItemProperty `
-        -Path $Path `
-        -Name "1" `
-        -Value $Keyboard `
-        -PropertyType String `
-        -Force | Out-Null
-}
-
-Write-Host "Keyboard layout successfully configured." -ForegroundColor Green
-Write-Host "Restart Windows to apply all changes."
 ```
 
 ## **Available keyboard layouts**
